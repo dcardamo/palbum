@@ -120,11 +120,16 @@ sub displayPic()
 	close (FILE);
 
 	chomp @file;
-    @file = sort @file;
 
-	my ($albumName, $albumDesc) = split /~:~/, $file[0];
-	my ($bgcolor, $fontcolor) = ($file[2], $file[3]);
-	my ($picName, $picDesc) = split /~:~/, $file[$picNum + 4];
+	my ($line, $line2);
+	($line, @file) = @file;
+	my ($albumName, $albumDesc, $albumDate) = split /~:~/, $line;
+	($line, @file) = @file;
+	my ($picsperPage) = $line;
+	($line, $line2, @file) = @file;
+	my ($bgcolor, $fontcolor) = ($line, $line2);
+	@file = sort @file;
+	my ($picName, $picDesc) = split /~:~/, $file[$picNum];
 
 	my $prev = $picNum - 1;
 	my $next = $picNum + 1;

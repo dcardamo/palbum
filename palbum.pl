@@ -21,6 +21,62 @@ use strict;
 use CGI qw(param);
 use Date::Manip;
 
+sub header()
+{
+	open (FILE, "</www/template/header.shtml") or print "<html><body>";
+	my @file = <FILE>;
+	foreach my $i (@file)
+	{
+		print $i;
+	}
+	close (FILE);
+}
+
+sub footer()
+{
+	open (FILE, "</www/template/footer.shtml") or print "<html><body>";
+	my @file = <FILE>;
+	foreach my $i (@file)
+	{
+		print $i;
+	}
+	close (FILE);
+}
+
+sub printMovies()
+{
+	opendir(DIR, ".");
+	my @allfiles = readdir(DIR);
+	my @movies;
+	foreach my $file (@allfiles)
+	{
+		unless ( -f "$file") { next; }  # only look at files
+		if ($file =~ /(avi|mpeg|mpg|mov|asf)$/i ) {
+			push @movies, $file;
+		}
+	}
+
+	if (not defined $movies[0]) { return; }
+
+	print "<h2>Movies</h2><br>\n";
+	print "<table border=\"1\" width=\"100%\">\n";
+	print "<tr>" .
+			"<td><b>Filename</b></td>" .
+			"<td><b>Size</b></td></tr>";
+	foreach my $movie (@movies)
+	{
+		my $filename = $movie;
+		my $size = -s $filename;
+		print "<tr>" .
+			"<td><a href=\"$filename\">$filename</a></td>" .
+			"<td>$size</td></tr>";
+
+	}
+	print "</table><br>\n";
+}
+
+
+
 #################
 #
 # Check if the file photo.dat exists, if not then create it.
@@ -59,14 +115,14 @@ sub displayIndex()
 	$date = ParseDate("today") unless (defined $date);
 	$date = UnixDate($date, "%a %b %e, %Y");
 
-	print "<html><head><title>$albumName - $date</title></head>\n";
-	print "<body bgcolor=$bgcolor>\n";
+	&header;
 	print "<center><h1><u><b>$albumName</b></u></h2>\n";
 	print "<b>$date</b><br>\n";
 	print "<h3>$albumDesc</h3>\n";
 	print "<hr>\n";
 
-	print "<table border=0 cellspacing=5 width=100%>\n";
+	&printMovies;  # print the movies out
+	print "<table border=1 cellspacing=5 width=100%>\n";
 	my $picNum = 0;
 	my $endedTR;
 	foreach my $photo (@file)
@@ -77,23 +133,6 @@ sub displayIndex()
 		print "<td align=center width=\"33%\">" .
 			"<a href=\"index.cgi?option=displayPic\&picNum=$picNum\&width=100%\">" .
 			"<img src=\"PAsmall$picName\" border=0 alt=\"$picName\"></a><br>" .
-
-            "<font size=-2>" .
-
-            "<a href=\"index.cgi?option=displayPic\&picNum=$picNum" .
-            "\&width=640\&height=480\">[640x480]</a>&nbsp;" .
-
-            "<a href=\"index.cgi?option=displayPic\&picNum=$picNum" .
-            "\&width=800\&height=600\">[800x600]</a>&nbsp;" .
-
-            "<a href=\"index.cgi?option=displayPic\&picNum=$picNum" .
-            "\&width=1024\&height=768\">[1024x768]</a>&nbsp;" .
-
-            "<a href=\"index.cgi?option=displayPic\&picNum=$picNum\"" .
-            ">[Actual]</a><br>" .
-
-            "</font>" .
-
 			"<font color=$fontcolor>$picDesc</font></td>\n";
 		$endedTR--;
 		if ( $endedTR == 0 ) { print "</tr>\n"; $endedTR = 1; }
@@ -103,7 +142,8 @@ sub displayIndex()
 	elsif ( $endedTR == 1 ) { print "<td>\&nbsp;</td>\n</tr>\n"; }
 	print "</table>\n";
 
-	print "</center></body></html>\n";
+	print "</center>\n";
+	&footer;
 }
 
 
@@ -134,8 +174,7 @@ sub displayPic()
 	my $prev = $picNum - 1;
 	my $next = $picNum + 1;
 
-	print "<html><head><title>Album: $albumName  Picture: $picName</title>";
-	print "</head><body bgcolor=$bgcolor>\n";
+	&header;
 	print "<center>\n";
 	print "<a href=index.cgi?option=displayPic\&picNum=$prev\&width=$width\&height=$height>Previous</a>  ";
 	print "<a href=index.cgi>Index</a>  ";
@@ -158,7 +197,8 @@ sub displayPic()
 	print "<a href=index.cgi?option=displayPic\&picNum=$prev\&width=$width\&height=$height>Previous</a>  ";
 	print "<a href=index.cgi>Index</a>  ";
 	print "<a href=index.cgi?option=displayPic\&picNum=$next\&width=$width\&height=$height>Next</a><br><br>";
-	print "</center></body></html>\n";
+	print "</center>\n";
+	&footer;
 }
 
 sub createPhotodat() {

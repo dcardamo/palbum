@@ -1,21 +1,13 @@
 #!/usr/bin/perl
-
-
-#########################
+##############################################
 #
-#  Dan Cardamore
+#  Dan Cardamore <dan@hld.ca>
+#  http://www.hld.ca/opensource
 #
-#########################
+#  Licensed under the GPL version 2.  
+#  http://www.gnu.org/licenses/gpl.html
 #
-# - If photo.dat doesn't exist then create a new one
-# - each line in photo.dat contains image name ~:~ Description
-# - first line conatins ALbumnName ~:~ Description
-# - second line contains the number of pictures per index page
-# - third line contains the background color
-# - fourth color contains the font color
-# - at bottom of index generated, it allows you to recreate, or search
-#
-##########################
+##############################################
 
 use strict;
 use CGI qw(param);

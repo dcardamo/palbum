@@ -112,6 +112,8 @@ sub displayPic()
 {
 	my $picNum = param('picNum');
     my ($height, $width) = ( param('height'), param('width') );
+    $height ||= 600;
+    $width ||= 800;
 	open (FILE, "<photo.dat") or die print "Error opening photo.dat";
 	flock (FILE, 2);
 	my @file = <FILE>;

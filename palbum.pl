@@ -216,6 +216,7 @@ sub displayPic()
 	print "<a href=index.cgi>Index</a>  ";
 	print "<a href=index.cgi?option=displayPic\&picNum=$next\&width=$width\&height=$height>Next</a><br><br>";
 
+	print qx(exiftags $picName | grep Created);
     if (defined $height) {
         print "<a href=\"index.cgi?option=displayPic\&picNum=$picNum\">";
         print "<img src=\"$picName\" border=0 alt=\"$picName\" " .
@@ -233,6 +234,11 @@ sub displayPic()
 	print "<a href=index.cgi?option=displayPic\&picNum=$prev\&width=$width\&height=$height>Previous</a>  ";
 	print "<a href=index.cgi>Index</a>  ";
 	print "<a href=index.cgi?option=displayPic\&picNum=$next\&width=$width\&height=$height>Next</a><br><br>";
+
+	print "<pre>";
+	print qx(exiftags $picName);
+	print "</pre>";
+
 	print "</center>\n";
 	&footer;
 }

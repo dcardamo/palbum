@@ -62,11 +62,12 @@ sub printAudio()
 	print "<table border=\"1\" width=\"100%\">\n";
 	print "<tr>" .
 			"<td><b>Filename</b></td>" .
-			"<td width=1%><b>Size&nbsp;(Bytes)</b></td></tr>";
+			"<td width=1%><b>Size&nbsp;(MB)</b></td></tr>";
 	foreach my $audio (@audios)
 	{
 		my $filename = $audio;
 		my $size = -s $filename;
+		$size = $size / 1000 / 1024;  # megabytes now
 		print "<tr>" .
 			"<td><a href=\"$filename\">$filename</a></td>" .
 			"<td>$size</td></tr>";
@@ -95,11 +96,12 @@ sub printMovies()
 	print "<table border=\"1\" width=\"100%\">\n";
 	print "<tr>" .
 			"<td><b>Filename</b></td>" .
-			"<td width=1%><b>Size&nbsp;(Bytes)</b></td></tr>";
+			"<td width=1%><b>Size&nbsp;(MB)</b></td></tr>";
 	foreach my $movie (@movies)
 	{
 		my $filename = $movie;
 		my $size = -s $filename;
+		$size = $size / 1000 / 1024;  # megabytes now
 		print "<tr>" .
 			"<td><a href=\"$filename\">$filename</a></td>" .
 			"<td>$size</td></tr>";

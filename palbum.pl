@@ -74,9 +74,26 @@ sub displayIndex()
 		my $mod = $picNum % 3;
 		if ( $mod == 0 ) { print "<tr>\n"; $endedTR = 3; }
 		my ($picName, $picDesc) = split /~:~/, $photo;
-		print "<td align=center>" .
+		print "<td align=center width=\"33%\">" .
 			"<a href=\"index.cgi?option=displayPic\&picNum=$picNum\">" .
 			"<img src=\"PAsmall$picName\" border=0 alt=\"$picName\"></a><br>" .
+
+            "<font size=-2>" .
+
+            "<a href=\"index.cgi?option=displayPic\&picNum=$picNum\&" .
+            "\&width=640\&height=480\">[640x480]</a>&nbsp;" .
+
+            "<a href=\"index.cgi?option=displayPic\&picNum=$picNum\&" .
+            "\&width=800\&height=600\">[800x600]</a>&nbsp;" .
+
+            "<a href=\"index.cgi?option=displayPic\&picNum=$picNum\&" .
+            "\&width=1024\&height=768\">[1024x768]</a>&nbsp;" .
+
+            "<a href=\"index.cgi?option=displayPic\&picNum=$picNum\"" .
+            ">[Actual]</a><br>" .
+
+            "</font>" .
+
 			"<font color=$fontcolor>$picDesc</font></td>\n";
 		$endedTR--;
 		if ( $endedTR == 0 ) { print "</tr>\n"; $endedTR = 1; }
@@ -94,6 +111,7 @@ sub displayIndex()
 sub displayPic()
 {
 	my $picNum = param('picNum');
+    my ($height, $width) = ( param('height'), param('width') );
 	open (FILE, "<photo.dat") or die print "Error opening photo.dat";
 	flock (FILE, 2);
 	my @file = <FILE>;
@@ -112,16 +130,22 @@ sub displayPic()
 	print "<html><head><title>Album: $albumName  Picture: $picName</title>";
 	print "</head><body bgcolor=$bgcolor>\n";
 	print "<center>\n";
-	print "<a href=index.cgi?option=displayPic\&picNum=$prev>Previous</a>  ";
+	print "<a href=index.cgi?option=displayPic\&picNum=$prev\&width=$width\&height=$height>Previous</a>  ";
 	print "<a href=index.cgi>Index</a>  ";
-	print "<a href=index.cgi?option=displayPic\&picNum=$next>Next</a><br><br>";
+	print "<a href=index.cgi?option=displayPic\&picNum=$next\&width=$width\&height=$height>Next</a><br><br>";
 
-	print "<img src=$picName border=0 alt=$picName><br>\n";
+    if (defined $height and defined $width) {
+        print "<img src=\"$picName\" border=0 alt=\"$picName\" " .
+            "width=\"$width\" height=\"$height\"><br>\n";
+    }
+    else {
+        print "<img src=$picName border=0 alt=$picName><br>\n";
+    }
 	print "<font color=$fontcolor>$picDesc</font><br><br>";
 
-	print "<a href=index.cgi?option=displayPic\&picNum=$prev>Previous</a>  ";
+	print "<a href=index.cgi?option=displayPic\&picNum=$prev\&width=$width\&height=$height>Previous</a>  ";
 	print "<a href=index.cgi>Index</a>  ";
-	print "<a href=index.cgi?option=displayPic\&picNum=$next>Next</a><br><br>";
+	print "<a href=index.cgi?option=displayPic\&picNum=$next\&width=$width\&height=$height>Next</a><br><br>";
 	print "</center></body></html>\n";
 }
 

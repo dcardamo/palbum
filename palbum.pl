@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 
 #########################
@@ -30,10 +30,9 @@ use Date::Manip;
 sub displayIndex()
 {
 	# check if the file is there
-	unless ( -e "photo.dat" )
-	{
-		generateIndexForm();
-		return;
+	unless ( -e "photo.dat" ) {
+        createPhotodat();
+        return;
 	}
 
 	# open the file and get prefs and other
@@ -43,6 +42,11 @@ sub displayIndex()
 	flock (FILE, 8);
 	close (FILE);
 	chomp @file;
+
+    if ( not defined $file[1] ) {
+        generateIndexForm();
+        return;
+    }
 
 	my ($albumName, $albumDesc, $date) = split /~:~/, $file[0];
 	my ($picPerPage, $bgcolor, $fontcolor) = ($file[1], $file[2], $file[3]);
@@ -121,10 +125,40 @@ sub displayPic()
 	print "</center></body></html>\n";
 }
 
+sub createPhotodat() {
+    opendir (DIR, ".");
+    my @allpics = readdir(DIR);
+    closedir(DIR);
+
+    chomp @allpics;
+    @allpics = sort @allpics;
+
+    my @pics;
+    foreach my $pic (@allpics) {
+        unless ( -f "$pic") { next; }  # only look at files
+        if ( $pic eq "photo.dat" ) { next; }  # ignore photo.dat
+        if ( $pic eq "index.cgi" ) { next; }  # ignore photo.dat
+        if ( $pic eq "palbum.pl" ) { next; }  # ignore photo.dat
+        if ( $pic =~ /PAsmall/ ) { next; }  # ignore thumbnails.
+        unless ($pic =~ /(png|jpg|jpeg|gif|bmp)$/i ) { next; }
+
+        if (-e "PAsmall$pic" ) {
+            print "$pic already thumbnailed\n";
+        }
+        else {
+            print "Thumbnailing $pic ...\n"; 
+            `convert -geometry 80x80 $pic PAsmall$pic`;
+        }
+
+    }
+    print "Done Creating thumbnails.  Visit this directory through the website\n";
+    open FILE, ">photo.dat" or die print "There was an error creating photo.dat";
+    close FILE;
+    chmod 0646, "photo.dat";
+}
+
 sub generateIndex()
 {
-	if ( -e "photo.dat" ) { die print "Error: photo.dat exists"; }
-
 	opendir (DIR, ".");
 	my @allpics = readdir(DIR);
 	closedir(DIR);
@@ -140,6 +174,7 @@ sub generateIndex()
 		if ( $pic eq "index.cgi" ) { next; }  # ignore photo.dat
 		if ( $pic eq "palbum.pl" ) { next; }  # ignore photo.dat
 		if ( $pic =~ /PAsmall/ ) { next; }  # ignore thumbnails.
+        unless ($pic =~ /(png|jpg|jpeg|gif|bmp)$/i ) { next; }
 
 		push @pics, $pic;
 	}
@@ -179,36 +214,37 @@ sub generateIndex()
 	displayIndex();
 }
 
+
+
 sub generateIndexForm()
 {
-	if ( -e "photo.dat" ) { die print "Error: photo.dat exists"; }
+	unless ( -e "photo.dat" ) { die print "photo.dat exists"; }
+    opendir (DIR, ".");
+    my @allpics = readdir(DIR);
+    closedir(DIR);
 
-	opendir (DIR, ".");
-	my @allpics = readdir(DIR);
-	closedir(DIR);
+    chomp @allpics;
+    @allpics = sort @allpics;
 
-	chomp @allpics;
-	@allpics = sort @allpics;
+    my @pics;
+    foreach my $pic (@allpics)
+    {
+        unless ( -f "$pic") { next; }  # only look at files
+        if ( $pic eq "photo.dat" ) { next; }  # ignore photo.dat
+        if ( $pic eq "index.cgi" ) { next; }  # ignore photo.dat
+        if ( $pic eq "palbum.pl" ) { next; }  # ignore photo.dat
+        if ( $pic =~ /PAsmall/ ) { next; }  # ignore thumbnails.
+        unless ($pic =~ /(png|jpg|jpeg|gif|bmp)$/i ) { next; }
 
-	my @pics;
-	foreach my $pic (@allpics)
-	{
-		unless ( -f "$pic") { next; }  # only look at files
-		if ( $pic eq "photo.dat" ) { next; }  # ignore photo.dat
-		if ( $pic eq "index.cgi" ) { next; }  # ignore photo.dat
-		if ( $pic eq "palbum.pl" ) { next; }  # ignore photo.dat
-		if ( $pic =~ /PAsmall/ ) { next; }  # ignore thumbnails.
-
-		`convert -geometry 80x80 $pic PAsmall$pic`;
-		push @pics, $pic;
-	}
+        push @pics, $pic;
+    }
 
 	print "<html><head><title>Generate Album</title></head>";
 	print "<body bgcolor=white><center>\n";
 	print "<font color=blue><b>Note:  The thumbnails have already been created.";
 	print "  You now need to customize your photo album</b></font><br>\n";
 
-	print "<form action=palbum.pl method=post>";
+	print "<form action=index.cgi method=post>";
 	print "<input type=hidden name=option value=generateIndex>";
 
 	# Global album properties

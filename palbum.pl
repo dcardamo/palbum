@@ -120,6 +120,7 @@ sub displayPic()
 	close (FILE);
 
 	chomp @file;
+    @file = sort @file;
 
 	my ($albumName, $albumDesc) = split /~:~/, $file[0];
 	my ($bgcolor, $fontcolor) = ($file[2], $file[3]);

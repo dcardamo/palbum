@@ -75,7 +75,7 @@ sub displayIndex()
 		if ( $mod == 0 ) { print "<tr>\n"; $endedTR = 3; }
 		my ($picName, $picDesc) = split /~:~/, $photo;
 		print "<td align=center>" .
-			"<a href=\"palbum.pl?option=displayPic\&picNum=$picNum\">" .
+			"<a href=\"index.cgi?option=displayPic\&picNum=$picNum\">" .
 			"<img src=\"PAsmall$picName\" border=0 alt=\"$picName\"></a><br>" .
 			"<font color=$fontcolor>$picDesc</font></td>\n";
 		$endedTR--;
@@ -112,16 +112,16 @@ sub displayPic()
 	print "<html><head><title>Album: $albumName  Picture: $picName</title>";
 	print "</head><body bgcolor=$bgcolor>\n";
 	print "<center>\n";
-	print "<a href=palbum.pl?option=displayPic\&picNum=$prev>Previous</a>  ";
-	print "<a href=palbum.pl>Index</a>  ";
-	print "<a href=palbum.pl?option=displayPic\&picNum=$next>Next</a><br><br>";
+	print "<a href=index.cgi?option=displayPic\&picNum=$prev>Previous</a>  ";
+	print "<a href=index.cgi>Index</a>  ";
+	print "<a href=index.cgi?option=displayPic\&picNum=$next>Next</a><br><br>";
 
 	print "<img src=$picName border=0 alt=$picName><br>\n";
 	print "<font color=$fontcolor>$picDesc</font><br><br>";
 
-	print "<a href=palbum.pl?option=displayPic\&picNum=$prev>Previous</a>  ";
-	print "<a href=palbum.pl>Index</a>  ";
-	print "<a href=palbum.pl?option=displayPic\&picNum=$next>Next</a><br><br>";
+	print "<a href=index.cgi?option=displayPic\&picNum=$prev>Previous</a>  ";
+	print "<a href=index.cgi>Index</a>  ";
+	print "<a href=index.cgi?option=displayPic\&picNum=$next>Next</a><br><br>";
 	print "</center></body></html>\n";
 }
 

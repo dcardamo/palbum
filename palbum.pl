@@ -75,18 +75,18 @@ sub displayIndex()
 		if ( $mod == 0 ) { print "<tr>\n"; $endedTR = 3; }
 		my ($picName, $picDesc) = split /~:~/, $photo;
 		print "<td align=center width=\"33%\">" .
-			"<a href=\"index.cgi?option=displayPic\&picNum=$picNum\">" .
+			"<a href=\"index.cgi?option=displayPic\&picNum=$picNum\&width=100%\">" .
 			"<img src=\"PAsmall$picName\" border=0 alt=\"$picName\"></a><br>" .
 
             "<font size=-2>" .
 
-            "<a href=\"index.cgi?option=displayPic\&picNum=$picNum\&" .
+            "<a href=\"index.cgi?option=displayPic\&picNum=$picNum" .
             "\&width=640\&height=480\">[640x480]</a>&nbsp;" .
 
-            "<a href=\"index.cgi?option=displayPic\&picNum=$picNum\&" .
+            "<a href=\"index.cgi?option=displayPic\&picNum=$picNum" .
             "\&width=800\&height=600\">[800x600]</a>&nbsp;" .
 
-            "<a href=\"index.cgi?option=displayPic\&picNum=$picNum\&" .
+            "<a href=\"index.cgi?option=displayPic\&picNum=$picNum" .
             "\&width=1024\&height=768\">[1024x768]</a>&nbsp;" .
 
             "<a href=\"index.cgi?option=displayPic\&picNum=$picNum\"" .
@@ -111,8 +111,8 @@ sub displayIndex()
 sub displayPic()
 {
 	my $picNum = param('picNum');
-    my ($height, $width) = ( param('height'), param('width') );
-    $width ||= "100%";
+    my $height = param('height');
+    my $width = param('width');
 	open (FILE, "<photo.dat") or die print "Error opening photo.dat";
 	flock (FILE, 2);
 	my @file = <FILE>;
@@ -141,8 +141,11 @@ sub displayPic()
             "width=\"$width\" height=\"$height\"><br>\n";
         print "</a>\n";
     }
-    else {
+    elsif (defined $width) {
         print "<img src=$picName border=0 alt=$picName width=$width><br>\n";
+    }
+    else {
+        print "<img src=$picName border=0 alt=$picName><br>\n";
     }
 	print "<font color=$fontcolor>$picDesc</font><br><br>";
 

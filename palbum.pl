@@ -135,8 +135,10 @@ sub displayPic()
 	print "<a href=index.cgi?option=displayPic\&picNum=$next\&width=$width\&height=$height>Next</a><br><br>";
 
     if (defined $height and defined $width) {
+        print "<a href=\"index.cgi?option=displayPic\&picNum=$picNum\">";
         print "<img src=\"$picName\" border=0 alt=\"$picName\" " .
             "width=\"$width\" height=\"$height\"><br>\n";
+        print "</a>\n";
     }
     else {
         print "<img src=$picName border=0 alt=$picName><br>\n";

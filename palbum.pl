@@ -231,7 +231,7 @@ sub generateIndex()
 		my $picDesc = param($pic);
 		if (not defined $picDesc or $picDesc eq "")
 		{
-			$picDesc = "No Description";
+			$picDesc = "";
 		}
 		print FILE "$pic~:~$picDesc\n";
 	}

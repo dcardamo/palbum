@@ -112,8 +112,7 @@ sub displayPic()
 {
 	my $picNum = param('picNum');
     my ($height, $width) = ( param('height'), param('width') );
-    $height ||= 600;
-    $width ||= 800;
+    $width ||= "100%";
 	open (FILE, "<photo.dat") or die print "Error opening photo.dat";
 	flock (FILE, 2);
 	my @file = <FILE>;
@@ -136,14 +135,14 @@ sub displayPic()
 	print "<a href=index.cgi>Index</a>  ";
 	print "<a href=index.cgi?option=displayPic\&picNum=$next\&width=$width\&height=$height>Next</a><br><br>";
 
-    if (defined $height and defined $width) {
+    if (defined $height) {
         print "<a href=\"index.cgi?option=displayPic\&picNum=$picNum\">";
         print "<img src=\"$picName\" border=0 alt=\"$picName\" " .
             "width=\"$width\" height=\"$height\"><br>\n";
         print "</a>\n";
     }
     else {
-        print "<img src=$picName border=0 alt=$picName><br>\n";
+        print "<img src=$picName border=0 alt=$picName width=$width><br>\n";
     }
 	print "<font color=$fontcolor>$picDesc</font><br><br>";
 

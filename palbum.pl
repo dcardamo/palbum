@@ -43,6 +43,39 @@ sub footer()
 	close (FILE);
 }
 
+sub printAudio()
+{
+	opendir(DIR, ".");
+	my @allfiles = readdir(DIR);
+	my @audios;
+	foreach my $file (@allfiles)
+	{
+		unless ( -f "$file") { next; }  # only look at files
+		if ($file =~ /(wav|wave|mp3|ogg)$/i ) {
+			push @audios, $file;
+		}
+	}
+
+	if (not defined $audios[0]) { return; }
+
+	print "<h2>Audio</h2><br>\n";
+	print "<table border=\"1\" width=\"100%\">\n";
+	print "<tr>" .
+			"<td><b>Filename</b></td>" .
+			"<td width=1%><b>Size&nbsp;(Bytes)</b></td></tr>";
+	foreach my $audio (@audios)
+	{
+		my $filename = $audio;
+		my $size = -s $filename;
+		print "<tr>" .
+			"<td><a href=\"$filename\">$filename</a></td>" .
+			"<td>$size</td></tr>";
+
+	}
+	print "</table><br>\n";
+}
+
+
 sub printMovies()
 {
 	opendir(DIR, ".");
@@ -62,7 +95,7 @@ sub printMovies()
 	print "<table border=\"1\" width=\"100%\">\n";
 	print "<tr>" .
 			"<td><b>Filename</b></td>" .
-			"<td><b>Size</b></td></tr>";
+			"<td width=1%><b>Size&nbsp;(Bytes)</b></td></tr>";
 	foreach my $movie (@movies)
 	{
 		my $filename = $movie;
@@ -122,6 +155,7 @@ sub displayIndex()
 	print "<hr>\n";
 
 	&printMovies;  # print the movies out
+	&printAudio;  # print the movies out
 	print "<table border=1 cellspacing=5 width=100%>\n";
 	my $picNum = 0;
 	my $endedTR;
